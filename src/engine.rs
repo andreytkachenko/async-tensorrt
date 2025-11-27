@@ -1,3 +1,4 @@
+use async_cuda::memory::device::DynDeviceBuffer;
 use async_cuda::runtime::Future;
 use async_cuda::{DeviceBuffer, Stream};
 
@@ -170,14 +171,14 @@ impl<'engine> ExecutionContext<'engine> {
     ///
     /// * `io_buffers` - Input and output buffers.
     /// * `stream` - CUDA stream to execute on.
-    pub async fn enqueue<T: Copy>(
+    pub async fn enqueue<K: AsRef<str>>(
         &mut self,
-        io_buffers: &mut std::collections::HashMap<&str, &mut DeviceBuffer<T>>,
+        io_buffers: &mut std::collections::HashMap<K, DynDeviceBuffer>,
         stream: &Stream,
     ) -> Result<()> {
         let mut io_buffers_inner = io_buffers
             .iter_mut()
-            .map(|(name, buffer)| (*name, buffer.inner_mut()))
+            .map(|(name, buffer)| (name.as_ref(), buffer.inner_mut()))
             .collect::<std::collections::HashMap<_, _>>();
         Future::new(move || self.inner.enqueue(&mut io_buffers_inner, stream.inner())).await
     }

@@ -226,11 +226,11 @@ impl<'engine> ExecutionContext<'engine> {
         )
     }
 
-    pub fn enqueue<T: Copy>(
+    pub fn enqueue(
         &mut self,
         io_tensors: &mut std::collections::HashMap<
             &str,
-            &mut async_cuda::ffi::memory::DeviceBuffer<T>,
+            &mut async_cuda::ffi::memory::DynDeviceBuffer,
         >,
         stream: &async_cuda::ffi::stream::Stream,
     ) -> Result<()> {
@@ -282,10 +282,10 @@ impl<'engine> ExecutionContext<'engine> {
         internal
     }
 
-    unsafe fn set_tensor_address<T: Copy>(
+    unsafe fn set_tensor_address(
         &mut self,
         tensor_name: &str,
-        buffer: &mut async_cuda::ffi::memory::DeviceBuffer<T>,
+        buffer: &mut async_cuda::ffi::memory::DynDeviceBuffer,
     ) -> Result<()> {
         let internal = self.as_mut_ptr();
         let tensor_name_cstr = std::ffi::CString::new(tensor_name).unwrap();
