@@ -11,7 +11,7 @@ repository = "https://github.com/oddity-ai/async-tensorrt"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-async-cuda = { version = "0.6.1", path = "../async-cuda" }
+async-cuda = { version = "0.6.1", git = "https://github.com/andreytkachenko/async-cuda.git" }
 cpp = "0.5"
 tracing = "0.1"
 
